@@ -1,0 +1,122 @@
+omg: 1
+lifecycle:
+  startup:
+    command: ["python", "/app/app.py"]
+actions:
+  add_subscriber:
+    http:
+      path: /add
+      method: post
+      port: 8000
+      contentType: application/json
+    arguments: &find_args
+      list_name:
+        type: string
+        required: true
+        in: requestBody
+      user_email:
+        type: string
+        required: true
+        in: requestBody
+      status:
+        type: string
+        required: true
+        in: requestBody
+      first_name:
+        type: string
+        required: true
+        in: requestBody
+      last_name:
+        type: string
+        required: true
+        in: requestBody
+    output:
+      type: object
+      contentType: application/json
+  delete_subscriber:
+    http:
+      path: /delete
+      method: post
+      port: 8000
+    arguments:
+      list_name:
+        type: string
+        required: true
+        in: requestBody
+      user_email:
+        type: string
+        required: true
+        in: requestBody
+    output:
+      type: object
+      contentType: application/json
+  add_tag:
+    http:
+      path: /addtag
+      method: post
+      port: 8000
+    arguments:
+      list_name:
+        type: string
+        required: true
+        in: requestBody
+      user_email:
+        type: string
+        required: true
+        in: requestBody
+      tag:
+        type: string
+        required: true
+        in: requestBody
+    output:
+      type: object
+      contentType: application/json
+  update_subscriber:
+    http:
+      path: /updatesubscriber
+      method: post
+      port: 8000
+    arguments:
+      list_name:
+        type: string
+        required: true
+        in: requestBody
+      user_email:
+        type: string
+        required: true
+        in: requestBody
+      status:
+        type: string
+        required: false
+        in: requestBody
+      first_name:
+        type: string
+        required: false
+        in: requestBody
+      last_name:
+        type: string
+        required: false
+        in: requestBody
+      new_email:
+        type: string
+        required: false
+        in: requestBody
+      address:
+        type: string
+        required: false
+        in: requestBody
+      phone:
+        type: string
+        required: false
+        in: requestBody
+    output:
+      type: object
+      contentType: application/json
+
+environment:
+  API_KEY:
+    type: string
+    help: Please acquire your mailchimp API from Account -> Extras -> API Keys
+  USERNAME:
+    type: string
+    help: Please provide your mailchimp USERNAME
