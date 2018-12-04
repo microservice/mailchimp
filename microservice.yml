@@ -116,7 +116,7 @@ actions:
 environment:
   API_KEY:
     type: string
-    help: Please acquire your mailchimp API from Account -> Extras -> API Keys
+    help: Please acquire your Mailchimp API from Account -> Extras -> API Keys
   USERNAME:
     type: string
     help: Please provide your mailchimp USERNAME
