@@ -5,15 +5,20 @@ lifecycle:
 actions:
   add_subscriber:
     http:
-      path: /add
+      path: /subscribers/add
       method: post
       port: 8000
       contentType: application/json
-    arguments: &find_args
+    arguments:
       list_name:
         type: string
-        required: true
+        required: false
         in: requestBody
+      list_id:
+        type: string
+        required: false
+        in: requestBody
+        help: List ID can be acquired from your list -> settings -> list name and defaults
       user_email:
         type: string
         required: true
@@ -22,6 +27,7 @@ actions:
         type: string
         required: true
         in: requestBody
+        help: "Status of subscriber. Inputs - subscribed/unsubscribed"
       first_name:
         type: string
         required: true
@@ -30,12 +36,20 @@ actions:
         type: string
         required: true
         in: requestBody
+      address:
+        type: string
+        required: false
+        in: requestBody
+      phone:
+        type: string
+        required: false
+        in: requestBody
     output:
       type: object
       contentType: application/json
   delete_subscriber:
     http:
-      path: /delete
+      path: /subscribers/delete
       method: post
       port: 8000
     arguments:
@@ -43,6 +57,11 @@ actions:
         type: string
         required: true
         in: requestBody
+      list_id:
+        type: string
+        required: false
+        in: requestBody
+        help: List ID can be acquired from your list -> settings -> list name and defaults
       user_email:
         type: string
         required: true
@@ -50,9 +69,9 @@ actions:
     output:
       type: object
       contentType: application/json
-  add_tag:
+  add_subscriber_tags:
     http:
-      path: /addtag
+      path: /tags
       method: post
       port: 8000
     arguments:
@@ -60,11 +79,16 @@ actions:
         type: string
         required: true
         in: requestBody
+      list_id:
+        type: string
+        required: false
+        in: requestBody
+        help: List ID can be acquired from your list -> settings -> list name and defaults
       user_email:
         type: string
         required: true
         in: requestBody
-      tag:
+      tags:
         type: string
         required: true
         in: requestBody
@@ -73,7 +97,7 @@ actions:
       contentType: application/json
   update_subscriber:
     http:
-      path: /updatesubscriber
+      path: /subscribers/updatesubscriber
       method: post
       port: 8000
     arguments:
@@ -81,6 +105,11 @@ actions:
         type: string
         required: true
         in: requestBody
+      list_id:
+        type: string
+        required: false
+        in: requestBody
+        help: List ID can be acquired from your list -> settings -> list name and defaults
       user_email:
         type: string
         required: true
@@ -89,6 +118,7 @@ actions:
         type: string
         required: false
         in: requestBody
+        help: "Status of subscriber. Inputs - subscribed/unsubscribed"
       first_name:
         type: string
         required: false
@@ -119,4 +149,4 @@ environment:
     help: Please acquire your Mailchimp API from Account -> Extras -> API Keys
   USERNAME:
     type: string
-    help: Please provide your mailchimp USERNAME
+    help: Please provide your Mailchimp USERNAME

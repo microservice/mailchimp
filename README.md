@@ -1,44 +1,36 @@
-# MailChimp as a microservice
-
-## Installation and Build
-```
-
-npm install -g omg
-omg build
-
-```
-
-
-## Usage
+# MailChimp  as a microservice
 
 ### Add subscriber to a list
 
-```
+```coffee
+# Storyscript
+mailchimp add_subscriber list_name: 'Your_list_name' user_email: 'xxxx@gmail.com' first_name: 'John' last_name: 'Doe' status: 'subscribed/unsubscribed' address: 'user_address' phone: '+1xxxx' API_KEY: 'Mailchimp API key' USERNAME: 'Mailchimp Username'
 
-omg exec add -a list_name=<list_name> -a user_email=<user_email> -a status="subscribed" -a first_name=<f_name> -a last_name=<L_name> -e API_KEY=<API_KEY> -e USERNAME= <username>
+# Required fields: list_name, list_id, user_email, first_name, last_name, status, API_Key, USERNAME
+# Optional fields: address, phone
 
 ```
 
 ### Delete subscriber from a list
+```coffee
+
+mailchimp delete_subscriber list_name: 'Your_list_name' user_email: 'xxxx@gmail.com' API_KEY: 'Mailchimp API key' USERNAME: 'Mailchimp Username'
+
+```
+### Update a subscriber
+
+```coffee
+
+mailchimp update_subscriber list_name: 'Your_list_name' user_email: 'xxxx@gmail.com' first_name: 'John' last_name: 'Doe' status: 'subscribed/unsubscribed' new_email: 'xyz@gmail.com' address: 'user_address' phone: '+1xxxx' API_KEY: 'Mailchimp API key' USERNAME: 'Mailchimp Username'
+
+# Required fields: list_name, list_id, user_email
 
 ```
 
-omg exec delete -a list_name=<list_name> -a user_email=<user_email> -e API_KEY=<API_KEY> -e USERNAME= <username>
+### Add Tags to a subscriber
 
-```
+```coffee
 
-### Add Tags to a subcriber
-
-```
-
-omg exec add_tag -a list_name=<list_name> -a user_email=<user_email> -a tag= <tag_name> -e API_KEY=<API_KEY> -e USERNAME= <username>
-
-```
-
-### Update a subcriber
-
-```
-
-omg exec update_subscriber -a list_name=<list_name< -a user_email= <user_email> -a last_name= <last_name> -a phone=<phone_number> -a new_email=<new_email> -e API_KEY= <API_KEY> -e USERNAME= <username>
+mailchimp add_subscriber_tags list_name: 'Your_list_name' user_email: 'xxxx@gmail.com' tags: 'tag1, tag2..' API_KEY: 'Mailchimp API key' USERNAME: 'Mailchimp Username'
 
 ```

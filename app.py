@@ -2,135 +2,180 @@
 import json
 import os
 import sys
-import requests
 
 from flask import Flask, make_response, request
 from mailchimp3 import MailChimp
 
 
 class Handler:
-	app = Flask(__name__)
+    app = Flask(__name__)
+    
+    def __init__(self) -> None:
+     self.client = MailChimp(mc_api=os.getenv('API_KEY'), mc_user=os.getenv('USERNAME'))
 
-	def __init__(self) -> None:
-		self.client = MailChimp(mc_api=os.getenv('API_KEY'), mc_user=os.getenv('USERNAME'))
+    def add_to_list(self):
+     req = request.get_json()
+     list_name = req['list_name']
+     user_email = req['user_email']
+     try:
+      list_id = self.get_list_id(list_name)
+     except Exception as e:
+      return self.not_found_error(e)
 
-	def add_to_list(self):
-		req = request.get_json()
-		list_name = req['list_name']
-		user_email = req['user_email']
-		status = req['status']
-		first_name = req['first_name']
-		last_name = req['last_name']
-		list_id = self.get_list_id(list_name)
+     data = self.subscriber_data()
+     #Add email to dict as its required
+     data.update({'email_address': user_email})
 
-		try:
-			self.client.lists.members.create(list_id, {
-			'email_address': user_email,
-			'status': status,
-			'merge_fields': {
-			'FNAME': first_name,
-			'LNAME': last_name,
-			},})
-		except Exception as e:
-			return str(e)
+     try:
+      self.client.lists.members.create(list_id,data)
+      return self.end({})
+     except Exception as e:
+      return self.end({'success': False, 'error_code': e.args[0]['status'], 'error': e.args[0]['detail']})
 
-		return self.end({'success': True})
-		
-	def delete_from_list(self):
-		req = request.get_json()
-		list_name = req['list_name']
-		user_email = req['user_email']
-		list_id = self.get_list_id(list_name)
-		user_id = self.get_user_id(list_id, user_email)
+    def delete_from_list(self):
+     req = request.get_json()
+     list_name = req['list_name']
+     user_email = req['user_email']
+     try:
+      list_id = self.get_list_id(list_name)
+     except Exception as e:
+      return self.not_found_error(e)
+     try:
+      user_id = self.get_user_id(list_id, user_email)
+     except Exception as e:
+      return self.not_found_error(e)
+   
+     try:
+       self.client.lists.members.delete(list_id, user_id)
+       return self.end({})
+     except Exception as e:
+       return self.end({'success': False, 'error_code': e.args[0]['status'], 'error': e.args[0]['detail']})
+        
+    def add_tags(self):
+     req = request.get_json()
+     list_name = req['list_name']
+     user_email = req['user_email']
+     tags = req['tags'].split(',')
+     tag_data = []
 
-		try:
-			self.client.lists.members.delete(list_id, user_id)
-		except Exception as e:
-			return str(e)
+     for tag in tags:
+      tag_data.append({'name': tag, 'status': 'active'})
 
-		return self.end({'success': True})
+     data = {'tags': tag_data}
 
-	def add_tags(self):
-		req = request.get_json()
-		list_name = req['list_name']
-		user_email = req['user_email']
-		tag_name = req['tag']
-		list_id = self.get_list_id(list_name)
-		user_id = self.get_user_id(list_id, user_email)
-		data = {'tags': [{'name': tag_name, 'status': 'active'}]}
-		
-		try:
-			self.client.lists.members.tags.update(list_id, user_id, data)
-		except Exception as e:
-			return str(e)
+     try:
+      list_id = self.get_list_id(list_name)
+     except Exception as e:
+      return self.not_found_error(e)
+     try:
+      user_id = self.get_user_id(list_id, user_email)
+     except Exception as e:
+      return self.not_found_error(e)
+     
+     try:
+       self.client.lists.members.tags.update(list_id, user_id, data)
+       return self.end({})
+     except Exception as e:
+       return self.end({'success': False, 'error_code': e.args[0]['status'], 'error': e.args[0]['detail']})
+    
+    def update_subscriber(self):
+     req = request.get_json()
+     list_name = req['list_name']
+     user_email = req['user_email']      
+     try:
+      list_id = self.get_list_id(list_name)
+     except Exception as e:
+      return self.not_found_error(e)
+     try:
+      user_id = self.get_user_id(list_id, user_email)
+     except Exception as e:
+      return self.not_found_error(e)
 
-		return self.end({'success': True})
+     data = self.subscriber_data()
+   
+     try:
+       self.client.lists.members.update(list_id, user_id, data)
+       return self.end({})
+     except Exception as e:
+       return self.end({'success': False, 'error_code': e.args[0]['status'], 'error': e.args[0]['detail']})
 
-	def update_subscriber(self):
-		req = request.get_json()
-		list_name = req['list_name']
-		user_email = req['user_email']
-		list_id = self.get_list_id(list_name)
-		user_id = self.get_user_id(list_id, user_email)
+    #Prepares and returns subscriber's data as a dictionary
+    def subscriber_data(self):
+     req = request.get_json()
+     data = {}
+     merge_field_data = {}
+   
+     key_map = {
+       'status': 'status',
+       'first_name': 'FNAME', 
+       'last_name': 'LNAME',
+       'new_email': 'email_address',
+       'address': 'ADDRESS',
+       'phone': 'PHONE'
+     }
+   
+     merge_field_exclusive = ['first_name', 'last_name', 'address', 'phone']
 
-		data = {}
-		merge_field_data = {}				
+     for key, val in req.items():
+       if key != 'list_name' and key != 'user_email' and key not in merge_field_exclusive:
+         data.update({key_map[key]:val})
+       elif key != 'list_name' and key != 'user_email':
+         merge_field_data.update({key_map[key]:val})
+   
+     data.update({'merge_fields': merge_field_data})
 
-		key_map = {
-			'status': 'status',
-			'first_name': 'FNAME', 
-			'last_name': 'LNAME',
-			'new_email': 'email_address',
-			'address': 'ADDRESS',
-			'phone': 'PHONE'
-		}
+     return data
 
-		merge_field_exclusive = ['first_name', 'last_name', 'address', 'phone']
+    # Returns List ID from List name input 
+    def get_list_id(self, list_name):
+     found = False
+     list_name = list_name
+     for x in self.client.lists.all(get_all=True, fields="lists.name,lists.id")['lists']:
+       if(x['name'] == list_name):
+         return x['id']
+         found = True
+   
+     if not found:
+      raise Exception('Invalid list name.')
 
-		for key, val in req.items():
-			if key and key != 'list_name' and key != 'user_email' and key not in merge_field_exclusive:
-				data.update({key_map[key]:val})
-			elif key and key != 'list_name' and key != 'user_email':
-				merge_field_data.update({key_map[key]:val})
+    # Returns User ID (Subscriber's Hash)
+    def get_user_id(self, list_id, user_email):
+     found = False
+     list_id = list_id
+     user_email = user_email
+     for x in self.client.lists.members.all(list_id, get_all=True, \
+       fields="members.email_address,members.id")['members']:
+       if (x['email_address'] == user_email):
+         return x['id']
+         found = True
 
-		data.update({'merge_fields': merge_field_data})
+     if not found:
+      raise Exception("Invalid user email: User not found.")
 
-		try:
-			self.client.lists.members.update(list_id, user_id, data)
-		except Exception as e:
-			return str(e)
+    #Returns json response
+    def end(self, res):
+     res = res
+     resp = make_response(json.dumps(res))
+     resp.headers['Content-Type'] = 'application/json; charset=utf-8'
+     return resp
 
-		return self.end({'success': True})
-
-
-	# Helper Functions 
-	def get_list_id(self, list_name):
-		for x in self.client.lists.all(get_all=True, fields="lists.name,lists.id")['lists']:
-			if(x['name'] == list_name):
-				return x['id']
-
-	def get_user_id(self, list_id, user_email):
-		for x in self.client.lists.members.all(list_id, get_all=True, \
-			fields="members.email_address,members.id")['members']:
-			if (x['email_address'] == user_email):
-				return x['id']
-
-	def end(self, res):
-		resp = make_response(json.dumps(res))
-		resp.headers['Content-Type'] = 'application/json; charset=utf-8'
-		return resp
-
+    def not_found_error(self, e):
+     return json.dumps({"message": str(e)}), 404
 
 if __name__ == '__main__':
-	if os.getenv('API_KEY') is None or os.getenv('USERNAME') is None:
-		print('API Key and Username not found')
-		sys.exit(1)
+ if os.getenv('API_KEY') is None:
+  print('API Key not found')
+  sys.exit(1)
 
-	handler = Handler()
-	handler.app.add_url_rule('/add', 'add', handler.add_to_list, methods=['post'])
-	handler.app.add_url_rule('/delete', 'delete', handler.delete_from_list, methods=['post'])
-	handler.app.add_url_rule('/addtag', 'addtag', handler.add_tags, methods=['post'])
-	handler.app.add_url_rule('/updatesubscriber', 'updatesubscriber', handler.update_subscriber, \
-	 							methods=['post'])
+ if os.getenv('USERNAME') is None:
+  print('USERNAME not found')
+  sys.exit(1)
 
-	handler.app.run(host='0.0.0.0', port=8000)
+ handler = Handler()
+ handler.app.register_error_handler(Exception, handler.not_found_error)
+ handler.app.add_url_rule('/subscribers/add', 'add', handler.add_to_list, methods=['post'])
+ handler.app.add_url_rule('/subscribers/delete', 'delete', handler.delete_from_list, methods=['post'])
+ handler.app.add_url_rule('/tags', 'addtag', handler.add_tags, methods=['post'])
+ handler.app.add_url_rule('/subscribers/updatesubscriber', 'updatesubscriber', handler.update_subscriber, \
+ methods=['post'])
+ handler.app.run(host='0.0.0.0', port=8000)
