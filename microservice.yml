@@ -12,13 +12,8 @@ actions:
     arguments:
       list_name:
         type: string
-        required: false
+        required: true
         in: requestBody
-      list_id:
-        type: string
-        required: false
-        in: requestBody
-        help: List ID can be acquired from your list -> settings -> list name and defaults
       user_email:
         type: string
         required: true
@@ -57,11 +52,6 @@ actions:
         type: string
         required: true
         in: requestBody
-      list_id:
-        type: string
-        required: false
-        in: requestBody
-        help: List ID can be acquired from your list -> settings -> list name and defaults
       user_email:
         type: string
         required: true
@@ -79,11 +69,6 @@ actions:
         type: string
         required: true
         in: requestBody
-      list_id:
-        type: string
-        required: false
-        in: requestBody
-        help: List ID can be acquired from your list -> settings -> list name and defaults
       user_email:
         type: string
         required: true
@@ -105,11 +90,6 @@ actions:
         type: string
         required: true
         in: requestBody
-      list_id:
-        type: string
-        required: false
-        in: requestBody
-        help: List ID can be acquired from your list -> settings -> list name and defaults
       user_email:
         type: string
         required: true
