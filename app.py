@@ -13,6 +13,7 @@ class Handler:
     def __init__(self) -> None:
      self.client = MailChimp(mc_api=os.getenv('API_KEY'), mc_user=os.getenv('USERNAME'))
 
+
     def add_to_list(self):
      req = request.get_json()
      list_name = req['list_name']
@@ -31,6 +32,7 @@ class Handler:
       return self.end({})
      except Exception as e:
       return self.end({'success': False, 'error_code': e.args[0]['status'], 'error': e.args[0]['detail']})
+
 
     def delete_from_list(self):
      req = request.get_json()
@@ -51,6 +53,7 @@ class Handler:
      except Exception as e:
        return self.end({'success': False, 'error_code': e.args[0]['status'], 'error': e.args[0]['detail']})
         
+
     def add_tags(self):
      req = request.get_json()
      list_name = req['list_name']
@@ -78,6 +81,7 @@ class Handler:
      except Exception as e:
        return self.end({'success': False, 'error_code': e.args[0]['status'], 'error': e.args[0]['detail']})
     
+
     def update_subscriber(self):
      req = request.get_json()
      list_name = req['list_name']
@@ -98,6 +102,7 @@ class Handler:
        return self.end({})
      except Exception as e:
        return self.end({'success': False, 'error_code': e.args[0]['status'], 'error': e.args[0]['detail']})
+
 
     #Prepares and returns subscriber's data as a dictionary
     def subscriber_data(self):
@@ -126,6 +131,7 @@ class Handler:
 
      return data
 
+
     # Returns List ID from List name input 
     def get_list_id(self, list_name):
      found = False
@@ -137,6 +143,7 @@ class Handler:
    
      if not found:
       raise Exception('Invalid list name.')
+
 
     # Returns User ID (Subscriber's Hash)
     def get_user_id(self, list_id, user_email):
@@ -152,12 +159,14 @@ class Handler:
      if not found:
       raise Exception("Invalid user email: User not found.")
 
+
     #Returns json response
     def end(self, res):
      res = res
      resp = make_response(json.dumps(res))
      resp.headers['Content-Type'] = 'application/json; charset=utf-8'
      return resp
+
 
     def not_found_error(self, e):
      return json.dumps({"message": str(e)}), 404
