@@ -34,3 +34,9 @@ mailchimp update_subscriber list_name: 'Your_list_name' user_email: 'xxxx@gmail.
 mailchimp add_subscriber_tags list_name: 'Your_list_name' user_email: 'xxxx@gmail.com' tags: 'tag1, tag2..' API_KEY: 'Mailchimp API key' USERNAME: 'Mailchimp Username'
 
 ```
+
+### How To:
+
+Get MailChimp API Key - https://mailchimp.com/help/about-api-keys/#find+or+generate+your+api+key
+
+Get MailChimp Username - Same as the user ID you login with.
