@@ -19,6 +19,7 @@ last_name: 'Doe' status: 'subscribed/unsubscribed' address: 'user_address' phone
 mailchimp delete_subscriber list_name: 'Your_list_name' user_email: 'xxxx@gmail.com'
 
 ```
+
 ### Update a subscriber
 
 ```coffee
