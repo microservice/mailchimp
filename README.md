@@ -4,7 +4,8 @@
 
 ```coffee
 # Storyscript
-mailchimp add_subscriber list_name: 'Your_list_name' user_email: 'xxxx@gmail.com' first_name: 'John'\ last_name: 'Doe' status: 'subscribed/unsubscribed' address: 'user_address' phone: '+1xxxx'
+mailchimp add_subscriber list_name: 'Your_list_name' user_email: 'xxxx@gmail.com' first_name: 'John'
+last_name: 'Doe' status: 'subscribed/unsubscribed' address: 'user_address' phone: '+1xxxx'
 
 # Required fields: list_name, list_id, user_email, first_name, last_name, status, API_Key, USERNAME
 # Optional fields: address, phone
@@ -22,7 +23,8 @@ mailchimp delete_subscriber list_name: 'Your_list_name' user_email: 'xxxx@gmail.
 
 ```coffee
 # Storyscript
-mailchimp update_subscriber list_name: 'Your_list_name' user_email: 'xxxx@gmail.com' first_name: 'John'\ last_name: 'Doe' status: 'subscribed/unsubscribed' new_email: 'xyz@gmail.com' address: 'user_address' phone: '+1xxxx'
+mailchimp update_subscriber list_name: 'Your_list_name' user_email: 'xxxx@gmail.com' first_name: 'John'
+last_name: 'Doe' status: 'subscribed/unsubscribed' new_email: 'xyz@gmail.com' address: 'user_address' phone: '+1xxxx'
 
 # Required fields: list_name, list_id, user_email
 
