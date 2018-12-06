@@ -97,7 +97,7 @@ class Handler:
         try:
             self.client.lists.members.update(list_id, user_id, data)
             return self.end({})
-        except Exception as e:
+        except:
             raise
 
 
