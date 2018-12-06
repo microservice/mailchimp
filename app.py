@@ -130,30 +130,24 @@ class Handler:
 
     # Returns List ID from List name input
     def get_list_id(self, list_name):
-        found = False
         list_name = list_name
         for x in self.client.lists.all(get_all=True, fields="lists.name,lists.id")['lists']:
             if(x['name'] == list_name):
-                found = True
                 return x['id']
 
-        if not found:
-            raise Exception('Invalid list name.')
+        raise Exception('Invalid list name.')
 
 
     # Returns User ID (Subscriber's Hash)
     def get_user_id(self, list_id, user_email):
-        found = False
         list_id = list_id
         user_email = user_email
         for x in self.client.lists.members.all(list_id, get_all=True, \
           fields="members.email_address,members.id")['members']:
             if (x['email_address'] == user_email):
-                found = True
                 return x['id']
 
-        if not found:
-            raise Exception("Invalid user email: User not found.")
+        raise Exception("Invalid user email: User not found.")
 
 
     def not_found_error(self, e):
