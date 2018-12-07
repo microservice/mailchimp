@@ -55,7 +55,7 @@ mailchimp add_subscriber_tags
 
 ### Obtaining MailChimp credentials:
 
-⋅⋅* MailChimp API key can be retrived from your MailChimp Account -> Extras -> API keys.
+..* MailChimp API key can be retrived from your MailChimp Account -> Extras -> API keys.
 Checkout - [How to find or generate API Key](https://mailchimp.com/help/about-api-keys/#find+or+generate+your+api+key)
 
-⋅⋅* MailChimp Username: Same as MailChimp account User ID.
+..* MailChimp Username: Same as MailChimp account User ID.
