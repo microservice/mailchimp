@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import json
 import os
-import sys
 
 from flask import Flask, make_response, request
 from mailchimp3 import MailChimp
@@ -11,46 +10,32 @@ class Handler:
     app = Flask(__name__)
 
     def __init__(self) -> None:
-        self.client = MailChimp(mc_api=os.getenv('API_KEY'), mc_user=os.getenv('USERNAME'))
+        self.client = MailChimp(mc_api=os.getenv('MAILCHIMP_API_KEY'), mc_user=os.getenv('MAILCHIMP_USERNAME'))
+
 
     def add_to_list(self):
         req = request.get_json()
         list_name = req['list_name']
         user_email = req['user_email']
-        try:
-            list_id = self.get_list_id(list_name)
-        except:
-            raise
+        list_id = self.get_list_id(list_name)
 
         data = self.subscriber_data()
-        # Add email to dict as it's required
+        # Add email to dict as it's a required attribute
         data.update({'email_address': user_email})
 
-        try:
-            self.client.lists.members.create(list_id, data)
-            return self.end({})
-        except:
-            raise
+        self.client.lists.members.create(list_id, data)
+        return self.end({})
 
 
     def delete_from_list(self):
         req = request.get_json()
         list_name = req['list_name']
         user_email = req['user_email']
-        try:
-            list_id = self.get_list_id(list_name)
-        except:
-            raise
-        try:
-            user_id = self.get_user_id(list_id, user_email)
-        except:
-            raise
+        list_id = self.get_list_id(list_name)
+        user_id = self.get_user_id(list_id, user_email)
 
-        try:
-            self.client.lists.members.delete(list_id, user_id)
-            return self.end({})
-        except:
-            raise
+        self.client.lists.members.delete(list_id, user_id)
+        return self.end({})
 
 
     def add_tags(self):
@@ -58,47 +43,26 @@ class Handler:
         list_name = req['list_name']
         user_email = req['user_email']
         tags = req['tags'].split(',')
-        tag_data = []
-        for tag in tags:
-            tag_data.append({'name': tag, 'status': 'active'})
-        data = {'tags': tag_data}
+        list_id = self.get_list_id(list_name)
+        user_id = self.get_user_id(list_id, user_email)
 
-        try:
-            list_id = self.get_list_id(list_name)
-        except:
-            raise
-        try:
-            user_id = self.get_user_id(list_id, user_email)
-        except:
-            raise
+        data = {'tags': list(map(lambda tag: {'name': tag, 'status': 'active'}, tags))}
 
-        try:
-            self.client.lists.members.tags.update(list_id, user_id, data)
-            return self.end({})
-        except:
-            raise
+        self.client.lists.members.tags.update(list_id, user_id, data)
+        return self.end({})
 
 
     def update_subscriber(self):
         req = request.get_json()
         list_name = req['list_name']
         user_email = req['user_email']
-        try:
-            list_id = self.get_list_id(list_name)
-        except:
-            raise
-        try:
-            user_id = self.get_user_id(list_id, user_email)
-        except:
-            raise
+        list_id = self.get_list_id(list_name)
+        user_id = self.get_user_id(list_id, user_email)
 
         data = self.subscriber_data()
 
-        try:
-            self.client.lists.members.update(list_id, user_id, data)
-            return self.end({})
-        except:
-            raise
+        self.client.lists.members.update(list_id, user_id, data)
+        return self.end({})
 
 
     # Prepares and returns subscriber's data as a dictionary
@@ -119,10 +83,11 @@ class Handler:
         merge_field_exclusive = ['first_name', 'last_name', 'address', 'phone']
 
         for key, val in req.items():
-            if key != 'list_name' and key != 'user_email' and key not in merge_field_exclusive:
-                data.update({key_map[key]: val})
-            elif key != 'list_name' and key != 'user_email':
-                merge_field_data.update({key_map[key]: val})
+            if key != 'list_name' and key != 'user_email':
+                if key in merge_field_exclusive:
+                    merge_field_data.update({key_map[key]: val})
+                else:
+                    data.update({key_map[key]: val})
 
         data.update({'merge_fields': merge_field_data})
         return data
@@ -135,7 +100,7 @@ class Handler:
             if(x['name'] == list_name):
                 return x['id']
 
-        raise Exception('Invalid list name.')
+        raise Exception("Invalid list name: MailChimp list name '%s' not found." % list_name)
 
 
     # Returns User ID (Subscriber's Hash)
@@ -148,39 +113,26 @@ class Handler:
                 return x['id']
 
         raise Exception("Invalid user email: User not found.")
-
-
-    def not_found_error(self, e):
-        return json.dumps({"message": str(e)}), 404
-
-
-    def mailchimp_error(self, e):
-        if e.args:
-          return json.dumps({'success': False, 'error_code': e.args[0]['status'], 'error': e.args[0]['detail']}), 400
-        else:
-          self.end({'success': False, 'message': 'Some error occoured, please check your inputs.'})
-
-
+        
     # Returns json response
     @staticmethod
     def end(res):
-        res = res
         resp = make_response(json.dumps(res))
         resp.headers['Content-Type'] = 'application/json; charset=utf-8'
         return resp
 
+    @staticmethod
+    def app_error(e):
+        return json.dumps({'message': str(e)}), 400
+
 
 if __name__ == '__main__':
-    if os.getenv('API_KEY') is None:
-        print('API Key not found')
-        sys.exit(1)
-
-    if os.getenv('USERNAME') is None:
-        print('USERNAME not found')
-        sys.exit(1)
+    for env_var in ["MAILCHIMP_API_KEY", "MAILCHIMP_USERNAME"]:
+        assert env_var in os.environ, \
+            f"The environment variable '{env_var}' must be set."
 
     handler = Handler()
-    handler.app.register_error_handler(Exception, handler.not_found_error)
+    handler.app.register_error_handler(Exception, handler.app_error)
     handler.app.add_url_rule('/subscribers/add', 'add', handler.add_to_list, methods=['post'])
     handler.app.add_url_rule('/subscribers/delete', 'delete', handler.delete_from_list, methods=['post'])
     handler.app.add_url_rule('/tags', 'addtag', handler.add_tags, methods=['post'])

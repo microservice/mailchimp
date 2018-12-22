@@ -124,9 +124,9 @@ actions:
       contentType: application/json
 
 environment:
-  API_KEY:
+  MAILCHIMP_API_KEY:
     type: string
     help: Please acquire your Mailchimp API from Account -> Extras -> API Keys
-  USERNAME:
+  MAILCHIMP_USERNAME:
     type: string
-    help: Please provide your Mailchimp USERNAME
+    help: Please provide your MailChimp username

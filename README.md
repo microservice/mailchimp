@@ -1,4 +1,4 @@
-# MailChimp as a microservice: Add, Delete, and update a subscriber
+# MailChimp as a microservice: Add, Delete, and Update a subscriber
 
 ### Add subscriber to a list
 
@@ -13,7 +13,7 @@ mailchimp add_subscriber
     address: 'user_address' 
     phone: '+1xxxx'
 
-# Required fields: list_name, list_id, user_email, first_name, last_name, status, API_Key, USERNAME
+# Required fields: list_name, user_email, first_name, last_name, status
 # Optional fields: address, phone
 ```
 
@@ -40,7 +40,7 @@ mailchimp update_subscriber
     address: 'user_address'
     phone: '+1xxxx'
 
-# Required fields: list_name, list_id, user_email
+# Required fields: list_name, user_email
 ```
 
 ### Add Tags to a subscriber
