@@ -25,7 +25,7 @@ mailchimp deleteSubscriber listName: 'Your_list_name' userEmail: 'xxxx@gmail.com
 
 ```coffee
 # Storyscript
-mailchimp updateSubscriber listName: 'Your_list_name' userEmail: 'xxxx@gmail.com'   firstName: 'John' lastName: 'Doe' status: 'subscribed/unsubscribed' new_email:'xyz@gmail.com'
+mailchimp updateSubscriber listName: 'Your_list_name' userEmail: 'xxxx@gmail.com'   firstName: 'John' lastName: 'Doe' status: 'subscribed/unsubscribed' newEmail:'xyz@gmail.com'
 address: 'user_address' phone: '+1xxxx'
 { "id": "id","email_address": "abc@example.com","unique_email_id": "unique_email_id",   "web_id": 3620xxxxx,"email_type": "html","status": "subscribed","merge_fields": {"merge_fields details"},"stats": {"stats details"},"ip_opt": "103.204.163.26",    "timestamp_opt": "2019-08-13T14:16:53+00:00","member_rating": 2,"last_changed": "2019-08-13T14:16:53+00:00","language": "","vip": false,"email_client": "","location": {"location details"},"source": "API - Generic","tags_count": 0,"tags": [],"list_id": "f7babfb748","_links": ["list of links"]
 }
