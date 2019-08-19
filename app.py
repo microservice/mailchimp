@@ -100,7 +100,6 @@ class Handler:
         data.update({'merge_fields': merge_field_data})
         return data
 
-
     # Returns List ID from List name input
     def get_list_id(self, listName):
         listName = listName
