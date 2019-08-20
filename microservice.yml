@@ -2,19 +2,23 @@ omg: 1
 lifecycle:
   startup:
     command: ["python", "/app/app.py"]
+info:
+  version: 1.0.0
+  title: Mailchimp
+  description: This is a mailchimp service    
 actions:
-  add_subscriber:
+  addSubscriber:
     http:
       path: /subscribers/add
       method: post
       port: 8000
       contentType: application/json
     arguments:
-      list_name:
+      listName:
         type: string
         required: true
         in: requestBody
-      user_email:
+      userEmail:
         type: string
         required: true
         in: requestBody
@@ -23,11 +27,11 @@ actions:
         required: true
         in: requestBody
         help: "Status of subscriber. Inputs - subscribed/unsubscribed"
-      first_name:
+      firstName:
         type: string
         required: true
         in: requestBody
-      last_name:
+      lastName:
         type: string
         required: true
         in: requestBody
@@ -40,36 +44,36 @@ actions:
         required: false
         in: requestBody
     output:
-      type: object
+      type: map
       contentType: application/json
-  delete_subscriber:
+  deleteSubscriber:
     http:
       path: /subscribers/delete
       method: post
       port: 8000
     arguments:
-      list_name:
+      listName:
         type: string
         required: true
         in: requestBody
-      user_email:
+      userEmail:
         type: string
         required: true
         in: requestBody
     output:
-      type: object
+      type: map
       contentType: application/json
-  add_subscriber_tags:
+  addSubscriberTags:
     http:
       path: /tags
       method: post
       port: 8000
     arguments:
-      list_name:
+      listName:
         type: string
         required: true
         in: requestBody
-      user_email:
+      userEmail:
         type: string
         required: true
         in: requestBody
@@ -78,19 +82,19 @@ actions:
         required: true
         in: requestBody
     output:
-      type: object
+      type: map
       contentType: application/json
-  update_subscriber:
+  updateSubscriber:
     http:
       path: /subscribers/updatesubscriber
       method: post
       port: 8000
     arguments:
-      list_name:
+      listName:
         type: string
         required: true
         in: requestBody
-      user_email:
+      userEmail:
         type: string
         required: true
         in: requestBody
@@ -99,15 +103,15 @@ actions:
         required: false
         in: requestBody
         help: "Status of subscriber. Inputs - subscribed/unsubscribed"
-      first_name:
+      firstName:
         type: string
         required: false
         in: requestBody
-      last_name:
+      lastName:
         type: string
         required: false
         in: requestBody
-      new_email:
+      newEmail:
         type: string
         required: false
         in: requestBody
@@ -120,7 +124,7 @@ actions:
         required: false
         in: requestBody
     output:
-      type: object
+      type: map
       contentType: application/json
 
 environment:
