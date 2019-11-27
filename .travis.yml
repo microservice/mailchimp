@@ -1,27 +1,18 @@
-# Disable sudo to speed up the build
 sudo: false
-
-# Set OS  for build
 dist: xenial
-
-# Set the build language to Python
 language: python
-
-# Set the python version to 2.7
 python: 3.7
-
-# Install the codecov pip dependency
 install:
-  - pip install -r requirements.txt
-  - pip install pytest==5.0.1
-  - pip install pytest-flask==0.15.0
-  - pip install pytest-cov==2.7.1
-  - pip install poetry
-
-# Run the unit test
+- pip install -r requirements.txt
+- pip install pytest==5.0.1
+- pip install pytest-flask==0.15.0
+- pip install pytest-cov==2.7.1
+- pip install poetry
 script:
-  - poetry run pytest --cov=app
-
-# Push the results back to codecov
+- poetry run pytest --cov=app
 after_success:
-  - bash <(curl -s https://codecov.io/bash)
+- bash <(curl -s https://codecov.io/bash)
+env:
+  global:
+  - secure: mv9B/oaCKkdmwkUmE+WM9EjwENEN36gtzTWAT5SpYdijfk7Qq1B/ng79ODuhBD/2BDEeZ+KLTxEJNIBIgZUSdtBkyl9ufhLDgJwnvznQtgs+wYTQjEd9uE1JCs/5+1eVBMY2r4mIF6ZlxAlIn30Swr4ggERJjq5kOi93EOPzeiGdlwPk9+IuADFCV3YudR0IJ8160SVWP1IjpliZ7FZgXLCcoQ/3DJHIXwtKW3ZvDjkayt1YPITvOov/DvTsAPBPDWQWIo1w8YZCNnjVMJe3o63c6mcMEs5mrD/iQEDxlvFrbhzta9xunzyLuZu1rWCeE8o8p4NFgPN/cpCcR3lYTxAtwZ/1NVz0ptiR3mJ73c8CJqJ+Y0+HJq33c0aSUsg80BijMj/p5vFcCDQuvwpJ1Q1YjuO4C7H2s9dVPajKM3ic3Wa6CXqseLXEWw631JVZ5KH++aihX8p7FJvSqkigMcPf8LHH6Ebt4xI/ekLG8ierGUXckbioYfekSNkQS1A5d4X9eTawUOIbE/aSvW2KSkzZp6iQPrFKjYAHJprQEelOeTybtbWFQKHw07+Mk5/MZmZAW/0Hf2nPtNRN9n3MJ04zQSBj+vDzo2zfBjTidvGgc01B4bxKv1G6G7sSqG83AnC7QCYq0rC1X8z/j3W0BbeM3sEa/M0pTU4vaI9kT/Q=
+  - secure: D0oR/w7uUJGkplUDiEKbqTHdzGsuCnaHc0vDajBwyKGRfrfyw89rur0paLrN/RX4+6lljxnfyJ5XTLCsUMVYdkuR4+MsthLFNoM8xT4HHwBg240ElusEMnQuikiYqed7+uP0lnKaZyglyalU+tcbEQDwszZdtE86H8UhJiZpLuYVXM2t7nOi7CQlQ/Vttx1U/9/HWkiq22kDNVXya18x+83P5RyP1hZRyDS+XHLE0JX03mToZ3Msft/tMuef4hmo2bFzJGPVjEgkcZYvsxgTxb1DpjZcd5fc2+xpD2IHLlIq42VV1Qt6R1dcoLBrz7+K3YYi+b0wGREgRJUvqyxNzGZURsG9zSSFPF/+sZU8o//NvQhpMR6l+UMK059KZRxuSSX0w48se4iM7F2KtoYX3W43yCIGnRfqxbdawGDyK2esBLDVCX5kSqhDjMGWa/x14dPXGtBEyJk+vZY0Ueg2DSWARn72ODaIUZRi5vM84CphXdI/+WmdXdlG99OYQeFl+MYb6RPTeazdX/OCDCbsXXf61Mj4aBgoHQE8VaAAfkzrRmnrmPbIxSZBtZLXAs5XD/c7FXfYyFoPj5llzu4CXPwZb1KlJYVmjmC/BBnu8lJLGmZ3UduzzRcLJBgtF90kp2vVae+O5PgwVAJ8hUCwu5WPr4GYz19imZRn0Ga9pME=
