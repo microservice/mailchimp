@@ -1,11 +1,17 @@
-omg: 1
-lifecycle:
-  startup:
-    command: ["python", "/app/app.py"]
+oms: 1
 info:
   version: 1.0.0
   title: Mailchimp
-  description: This is a mailchimp service    
+  description: This is a mailchimp service
+  contact:
+    name: Open Microservices
+    url: 'https://openmicroservices.org'
+    email: core@openmicroservices.org
+lifecycle:
+  startup:
+    command:
+      - python
+      - /app/app.py
 actions:
   addSubscriber:
     http:
@@ -26,7 +32,7 @@ actions:
         type: string
         required: true
         in: requestBody
-        help: "Status of subscriber. Inputs - subscribed/unsubscribed"
+        help: Status of subscriber. Inputs - subscribed/unsubscribed
       firstName:
         type: string
         required: true
@@ -102,7 +108,7 @@ actions:
         type: string
         required: false
         in: requestBody
-        help: "Status of subscriber. Inputs - subscribed/unsubscribed"
+        help: Status of subscriber. Inputs - subscribed/unsubscribed
       firstName:
         type: string
         required: false
@@ -126,7 +132,6 @@ actions:
     output:
       type: map
       contentType: application/json
-
 environment:
   MAILCHIMP_API_KEY:
     type: string
