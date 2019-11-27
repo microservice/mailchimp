@@ -1,79 +1,166 @@
-# MailChimp OMG Microservice
+# _Mailchimp_ Open Microservice
 
-[![Open Microservice Guide](https://img.shields.io/badge/OMG%20Enabled-👍-green.svg?)](https://microservice.guide)
-[![Build Status](https://travis-ci.com/omg-services/mailchimp.svg?branch=master)](https://travis-ci.com/omg-services/mailchimp)
-[![codecov](https://codecov.io/gh/omg-services/mailchimp/branch/master/graph/badge.svg)](https://codecov.io/gh/omg-services/mailchimp)
+> This is a mailchimp service
 
-### Add subscriber to a list
+[![Open Microservice Specification Version](https://img.shields.io/badge/Open%20Microservice-1.0-477bf3.svg)](https://openmicroservices.org)
+[![Open Microservices Spectrum Chat](https://withspectrum.github.io/badge/badge.svg)](https://spectrum.chat/open-microservices)
+[![Open Microservices Code of Conduct](https://img.shields.io/badge/Contributor%20Covenant-v1.4%20adopted-ff69b4.svg)](https://github.com/oms-services/.github/blob/master/CODE_OF_CONDUCT.md)
+[![Open Microservices Commitzen](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
 
-```coffee
-# Storyscript
-mailchimp addSubscriber listName: 'Your_list_name' userEmail: 'xxxx@gmail.com' firstName: 'John' lastName: 'Doe' status: 'subscribed/unsubscribed' address: 'user_address' phone: '+1xxxx'
-{ "id": "id","email_address": "abc@example.com","unique_email_id": "unique_email_id","web_id": 3620xxxxx,"email_type": "html","status": "subscribed","merge_fields": {"merge_fields details"},"stats": {"stats details"},"ip_opt": "103.204.163.26",    "timestamp_opt": "2019-08-13T14:16:53+00:00","member_rating": 2,"last_changed": "2019-08-13T14:16:53+00:00","language": "","vip": false,"email_client": "","location": {"location details"},"source": "API - Generic","tags_count": 0,"tags": [],"list_id": "f7babfb748","_links": ["list of links"]
-}
-```
+## Introduction
 
-### Delete subscriber from a list
+This project is an example implementation of the [Open Microservice Specification](https://openmicroservices.org), a standard
+originally created at [Storyscript](https://storyscript.io) for building highly-portable "microservices" that expose the
+events, actions, and APIs inside containerized software.
 
-```coffee
-# Storyscript
-mailchimp deleteSubscriber listName: 'Your_list_name' userEmail: 'xxxx@gmail.com'
-{"message": "list deleted successfully","success": true}
-```
+## Getting Started
 
-### Update a subscriber
+The `oms` command-line interface allows you to interact with Open Microservices. If you're interested in creating an Open
+Microservice the CLI also helps validate, test, and debug your `oms.yml` implementation!
 
-```coffee
-# Storyscript
-mailchimp updateSubscriber listName: 'Your_list_name' userEmail: 'xxxx@gmail.com'   firstName: 'John' lastName: 'Doe' status: 'subscribed/unsubscribed' newEmail:'xyz@gmail.com'
-address: 'user_address' phone: '+1xxxx'
-{ "id": "id","email_address": "abc@example.com","unique_email_id": "unique_email_id",   "web_id": 3620xxxxx,"email_type": "html","status": "subscribed","merge_fields": {"merge_fields details"},"stats": {"stats details"},"ip_opt": "103.204.163.26",    "timestamp_opt": "2019-08-13T14:16:53+00:00","member_rating": 2,"last_changed": "2019-08-13T14:16:53+00:00","language": "","vip": false,"email_client": "","location": {"location details"},"source": "API - Generic","tags_count": 0,"tags": [],"list_id": "f7babfb748","_links": ["list of links"]
-}
-```
+See the [oms-cli](https://github.com/microservices/oms) project to learn more!
 
-### Add Tags to a subscriber
-
-```coffee
-# Storyscript
-mailchimp addSubscriberTags listName: 'Your_list_name' userEmail: 'xxxx@gmail.com' tags: 'tag1, tag2..'
-{"message": "Tag added successfully","success": true}
+### Installation
 
 ```
+npm install -g @microservices/oms
+```
 
-### Obtaining MailChimp credentials:
+## Usage
 
-* MailChimp API key can be retrived from your MailChimp Account -> Extras -> API keys.
-Checkout - [How to find or generate API Key](https://mailchimp.com/help/about-api-keys/#find+or+generate+your+api+key)
+### Open Microservices CLI Usage
 
-* MailChimp Username: Same as MailChimp account User ID.
+Once you have the [oms-cli](https://github.com/microservices/oms) installed, you can run any of the following commands from
+within this project's root directory:
 
-Curious to [learn more](https://docs.storyscript.io/)?
+#### Actions
 
-✨🍰✨
+##### addSubscriber
 
-## Usage with [OMG CLI](https://www.npmjs.com/package/omg)
+>
 
-##### Add Subscriber
+##### Action Arguments
+
+| Argument Name      | Type     | Required | Default | Description                                                          |
+| :----------------- | :------- | :------- | :------ | :------------------------------------------------------------------- |
+| listName           | `string` | `true`   | None    | No description provided.                                             |
+| userEmail          | `string` | `true`   | None    | No description provided.                                             |
+| status             | `string` | `true`   | None    | Status of subscriber. Inputs - subscribed/unsubscribed               |
+| firstName          | `string` | `true`   | None    | No description provided.                                             |
+| lastName           | `string` | `true`   | None    | No description provided.                                             |
+| address            | `string` | `false`  | None    | No description provided.                                             |
+| phone              | `string` | `false`  | None    | No description provided.                                             |
+| MAILCHIMP_API_KEY  | `string` | `false`  | None    | Please acquire your Mailchimp API from Account -> Extras -> API Keys |
+| MAILCHIMP_USERNAME | `string` | `false`  | None    | Please provide your MailChimp username                               |
+
 ```shell
-$ omg run addSubscriber -a listName=<LIST_NAME> -a userEmail=<USER_EMAIL> -a status=<STATUS> -a firstName=<FRIST_NAME> -a lastName=<LAST_NAME> -e MAILCHIMP_API_KEY=<MAILCHIMP_API_KEY> -e MAILCHIMP_USERNAME=<MAILCHIMP_USERNAME>
+oms run addSubscriber \
+    -a listName='*****' \
+    -a userEmail='*****' \
+    -a status='*****' \
+    -a firstName='*****' \
+    -a lastName='*****' \
+    -a address='*****' \
+    -a phone='*****' \
+    -e MAILCHIMP_API_KEY=$MAILCHIMP_API_KEY \
+    -e MAILCHIMP_USERNAME=$MAILCHIMP_USERNAME
 ```
 
-##### Delete Subscriber
+##### deleteSubscriber
+
+>
+
+##### Action Arguments
+
+| Argument Name      | Type     | Required | Default | Description                                                          |
+| :----------------- | :------- | :------- | :------ | :------------------------------------------------------------------- |
+| listName           | `string` | `true`   | None    | No description provided.                                             |
+| userEmail          | `string` | `true`   | None    | No description provided.                                             |
+| MAILCHIMP_API_KEY  | `string` | `false`  | None    | Please acquire your Mailchimp API from Account -> Extras -> API Keys |
+| MAILCHIMP_USERNAME | `string` | `false`  | None    | Please provide your MailChimp username                               |
+
 ```shell
-$ omg run deleteSubscriber -a listName=<LIST_NAME> -a userEmail=<USER_EMAIL> -e MAILCHIMP_API_KEY=<MAILCHIMP_API_KEY> -e MAILCHIMP_USERNAME=<MAILCHIMP_USERNAME>
+oms run deleteSubscriber \
+    -a listName='*****' \
+    -a userEmail='*****' \
+    -e MAILCHIMP_API_KEY=$MAILCHIMP_API_KEY \
+    -e MAILCHIMP_USERNAME=$MAILCHIMP_USERNAME
 ```
 
-##### Update Subscriber
+##### addSubscriberTags
+
+>
+
+##### Action Arguments
+
+| Argument Name      | Type     | Required | Default | Description                                                          |
+| :----------------- | :------- | :------- | :------ | :------------------------------------------------------------------- |
+| listName           | `string` | `true`   | None    | No description provided.                                             |
+| userEmail          | `string` | `true`   | None    | No description provided.                                             |
+| tags               | `string` | `true`   | None    | No description provided.                                             |
+| MAILCHIMP_API_KEY  | `string` | `false`  | None    | Please acquire your Mailchimp API from Account -> Extras -> API Keys |
+| MAILCHIMP_USERNAME | `string` | `false`  | None    | Please provide your MailChimp username                               |
+
 ```shell
-$ omg run updateSubscriber -a listName=<LIST_NAME> -a userEmail=<USER_EMAIL> -a status=<STATUS> -a firstName=<FRIST_NAME> -a lastName=<LAST_NAME> -a newEmail=<NEW_EMAIL> -e MAILCHIMP_API_KEY=<MAILCHIMP_API_KEY> -e MAILCHIMP_USERNAME=<MAILCHIMP_USERNAME>
+oms run addSubscriberTags \
+    -a listName='*****' \
+    -a userEmail='*****' \
+    -a tags='*****' \
+    -e MAILCHIMP_API_KEY=$MAILCHIMP_API_KEY \
+    -e MAILCHIMP_USERNAME=$MAILCHIMP_USERNAME
 ```
 
-##### Add Subscriber Tags
+##### updateSubscriber
+
+>
+
+##### Action Arguments
+
+| Argument Name      | Type     | Required | Default | Description                                                          |
+| :----------------- | :------- | :------- | :------ | :------------------------------------------------------------------- |
+| listName           | `string` | `true`   | None    | No description provided.                                             |
+| userEmail          | `string` | `true`   | None    | No description provided.                                             |
+| status             | `string` | `false`  | None    | Status of subscriber. Inputs - subscribed/unsubscribed               |
+| firstName          | `string` | `false`  | None    | No description provided.                                             |
+| lastName           | `string` | `false`  | None    | No description provided.                                             |
+| newEmail           | `string` | `false`  | None    | No description provided.                                             |
+| address            | `string` | `false`  | None    | No description provided.                                             |
+| phone              | `string` | `false`  | None    | No description provided.                                             |
+| MAILCHIMP_API_KEY  | `string` | `false`  | None    | Please acquire your Mailchimp API from Account -> Extras -> API Keys |
+| MAILCHIMP_USERNAME | `string` | `false`  | None    | Please provide your MailChimp username                               |
+
 ```shell
-$ omg run addSubscriberTags -a listName=<LIST_NAME> -a userEmail=<USER_EMAIL> -a tags=<TAGS> -e MAILCHIMP_API_KEY=<MAILCHIMP_API_KEY> -e MAILCHIMP_USERNAME=<MAILCHIMP_USERNAME>
+oms run updateSubscriber \
+    -a listName='*****' \
+    -a userEmail='*****' \
+    -a status='*****' \
+    -a firstName='*****' \
+    -a lastName='*****' \
+    -a newEmail='*****' \
+    -a address='*****' \
+    -a phone='*****' \
+    -e MAILCHIMP_API_KEY=$MAILCHIMP_API_KEY \
+    -e MAILCHIMP_USERNAME=$MAILCHIMP_USERNAME
 ```
 
-**Note**: The OMG CLI requires [Docker](https://docs.docker.com/install/) to be installed.
+## Contributing
 
-## License
-[MIT License](https://github.com/omg-services/mailchimp/blob/master/LICENSE).
+All suggestions in how to improve the specification and this guide are very welcome. Feel free share your thoughts in the
+Issue tracker, or even better, fork the repository to implement your own ideas and submit a pull request.
+
+[![Edit mailchimp on CodeSandbox](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/github/oms-services/mailchimp)
+
+This project is guided by [Contributor Covenant](https://github.com/oms-services/.github/blob/master/CODE_OF_CONDUCT.md).
+Please read out full [Contribution Guidelines](https://github.com/oms-services/.github/blob/master/CONTRIBUTING.md).
+
+## Additional Resources
+
+- [Install the CLI](https://github.com/microservices/oms) - The OMS CLI helps developers create, test, validate, and build
+  microservices.
+- [Example OMS Services](https://github.com/oms-services) - Examples of OMS-compliant services written in a variety of
+  languages.
+- [Example Language Implementations](https://github.com/microservices) - Find tooling & language implementations in Node,
+  Python, Scala, Java, Clojure.
+- [Storyscript Hub](https://hub.storyscript.io) - A public registry of OMS services.
+- [Community Chat](https://spectrum.chat/open-microservices) - Have ideas? Questions? Join us on Spectrum.
